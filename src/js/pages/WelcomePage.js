@@ -1,108 +1,57 @@
 import React,{Component} from 'react'
-import {View,StyleSheet,Text} from 'react-native'
-import {} from 'react-navigation';
+import {View,StyleSheet,Text,Button,StatusBar,Image,ScrollView} from 'react-native'
+import Swiper from 'react-native-swiper'
 
 class Welcome extends Component{
     componentDidMount() {
-        this.timer=setTimeout(()=>{
-            this.props.navigation.push
-        })
+
+
     }
     render(){
         return (
-            <View style={{flex:1,justifyContent:'center',alignItems:'center'}}><Text>的地方是电风扇</Text></View>
-        )
+            <Swiper style={styles.wrapper} loop={false} showsButtons={false} >
+                <View style={styles.slide1}>
+                    <Text style={styles.text}>Hello Swiper</Text>
+                </View>
+                <View style={styles.slide2}>
+                    <Text style={styles.text}>Beautiful</Text>
+                </View>
+                <View style={styles.slide3}>
+                    <Text style={styles.text}>And simple</Text>
+                    <View style={{position:'absolute', left:0, right:0,bottom:59, alignItems:'center',justifyContent:'center'}}><Button
+                        onPress={()=>this.props.navigation.navigate("ButtomTabNavigator")} style={{width:150,padding:20,height:40}} title={'立即体验'}/></View>
+                </View>
+            </Swiper>
+        );
      }
 }
-export default Welcome
-
-
-/*import React from 'react';
-import {
-    ActivityIndicator,
-    AsyncStorage,
-    Button,
-    StatusBar,
-    StyleSheet,
-    View,
-} from 'react-native';
-import { StackNavigator, SwitchNavigator } from 'react-navigation'; // Version can be specified in package.json
-
-class SignInScreen extends React.Component {
-    static navigationOptions = {
-        title: 'Please sign in',
-    };
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <Button title="Sign in!" onPress={this._signInAsync} />
-            </View>
-        );
-    }
-
-    _signInAsync = async () => {
-        await AsyncStorage.setItem('userToken', 'abc');
-        this.props.navigation.navigate('App');
-    };
-}
-
-class HomeScreen extends React.Component {
-    static navigationOptions = {
-        title: 'Welcome to the app!',
-    };
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <Button title="Show me more of the app" onPress={this._showMoreApp} />
-                <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
-            </View>
-        );
-    }
-
-    _showMoreApp = () => {
-        this.props.navigation.navigate('Other');
-    };
-
-    _signOutAsync = async () => {
-        await AsyncStorage.clear();
-        this.props.navigation.navigate('Auth');
-    };
-}
-
-class OtherScreen extends React.Component {
-    static navigationOptions = {
-        title: 'Lots of features here',
-    };
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <Button title="I'm done, sign me out" onPress={this._signOutAsync} />
-                <StatusBar barStyle="default" />
-            </View>
-        );
-    }
-
-    _signOutAsync = async () => {
-        await AsyncStorage.clear();
-        this.props.navigation.navigate('Auth');
-    };
-}
-
-
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+    wrapper: {
     },
-});
+    slide1: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#9DD6EB',
+    },
+    slide2: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#97CAE5',
+    },
+    slide3: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#92BBD9',
+    },
+    text: {
+        color: '#fff',
+        fontSize: 30,
+        fontWeight: 'bold',
+    }
+})
+export default Welcome
 
-const AppStack = StackNavigator({ Home: HomeScreen, Other: OtherScreen });
-const AuthStack = StackNavigator({ SignIn: SignInScreen });
-
-
-*/

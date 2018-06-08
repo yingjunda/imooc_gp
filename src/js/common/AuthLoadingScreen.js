@@ -1,25 +1,32 @@
 import React from "react";
-import {AsyncStorage,View,ActivityIndicator} from "react-native";
+import {AsyncStorage, View, ActivityIndicator} from "react-native";
 
 class AuthLoadingScreen extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
         this._bootstrapAsync();
     }
-    _bootstrapAsync = async () => {
-        const userToken = await AsyncStorage.getItem('userToken');
 
-        // This will switch to the App screen or Auth screen and this loading
-        // screen will be unmounted and thrown away.
-        this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+    _bootstrapAsync = async () => {
+        AsyncStorage.clear()
+        AsyncStorage.getItem('userToken').then((userToken) => {
+            if (userToken) {
+                AsyncStorage.setItem('userToken', '123');
+            }
+            this.props.navigation.navigate(userToken ? 'ButtomTabNavigator' : 'WelcomePage');
+        }).catch(error => {
+            console.log(error);
+            // Error retrieving data
+        })
+
     };
 
-    // Render any loading content that you like here
+
     render() {
         return (
-            <View style={{flex:1}}>
-                <ActivityIndicator />
-
+            <View style={{flex: 1,alignItems:'center', justifyContent:'center'}}>
+                <ActivityIndicator/>
             </View>
         );
     }
