@@ -1,8 +1,11 @@
 package com.imooc_gp;
 
 import android.app.Application;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -24,7 +27,9 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),new SplashScreenReactPackage()  //添加这一句
+          new MainReactPackage(),
+            new VectorIconsPackage(),
+            new SplashScreenReactPackage(),new SplashScreenReactPackage(),new VectorIconsPackage()  //添加这一句
       );
     }
 

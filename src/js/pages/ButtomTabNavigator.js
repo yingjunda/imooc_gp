@@ -1,73 +1,139 @@
 import React from 'react';
-import { Text, View,StatusBar } from 'react-native';
-import { createBottomTabNavigator,createStackNavigator } from 'react-navigation';
-import NavigationBar from '../common/NavigationBar'
-
-class HomeScreen extends React.Component {
-    static navigationOptions = ({navigation})=>({
-        header: <NavigationBar title={'首页'} style={{backgroundColor:"#7fbb00"}} statusBar={{backgroundColor:'#7fbb00'}} />
-    });
-    render() {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <StatusBar/>
-                <Text>Home!</Text>
-            </View>
-        );
-    }
-}
+import {Text, View, StatusBar, Image,Animated,Easing} from 'react-native';
+import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
+import Ionicons from '../utils/iconfont'
+import HomeScreen from './HomePage'
+import LoginScreen from './LoginPage'
 
 class SettingsScreen extends React.Component {
     render() {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Settingszz!</Text>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text><Ionicons name='xinlang' size={24} color="yellow"/></Text>
+            </View>
+        );
+    }
+}
+class MineScreen extends React.Component {
+    render() {
+        return (
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text><Ionicons name='xinlang' size={24} color="yellow"/></Text>
             </View>
         );
     }
 }
 
- const TabBar= createBottomTabNavigator({
-     Home: {
+/*创建Tab路由*/
+const TabBar = createBottomTabNavigator({
+    New: {
 
-         screen: HomeScreen,
-
-         path: 'people/:name',},
-     Settings: SettingsScreen,
-
-
- },{
-    navigationOptions: ({ navigation }) => ({
-        tabBarIcon: ({ focused, tintColor }) => {
-            const { routeName } = navigation.state;
-            let iconName;
-            if (routeName === 'Home') {
-                iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-            } else if (routeName === 'Settings') {
-                iconName = `ios-options${focused ? '' : '-outline'}`;
+        screen: HomeScreen,
+        navigationOptions: {
+            tabBarLabel: '新鲜事',
+            tabBarIcon: ({tintColor}) => {
+                return <Ionicons name='fengche' size={20} color={tintColor}/>;
             }
-
-            // You can return any component that you like here! We usually use an
-            // icon component from react-native-vector-icons
-            return <Ionicons name={iconName} size={25} color={tintColor} />;
         },
-    }),
-        tabBarOptions: {
-    activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
-}
- });
+        path: 'new'
+    },
+    Home: {
+        screen: SettingsScreen,
+        navigationOptions: {
+            tabBarLabel: '创投圈',
+            tabBarIcon: ({tintColor}) => {
+                return <Ionicons name='jijin' size={20} color={tintColor}/>;
+            },
+            path: 'home'
+        }
+    },
+    Mine: {
+        screen: MineScreen,
+        navigationOptions: {
+            tabBarLabel: '我的',
+            tabBarIcon: ({tintColor}) => {
+                return <Ionicons name='wode' size={20} color={tintColor}/>;
+            }
+        }
+    },
 
-export default createStackNavigator({
-    TabBar: TabBar,
-    Settings: SettingsScreen,
+}, {
+    backBehavior: 'none',
+    tabBarOptions: {
+        activeTintColor: '#7fbb00',
+        inactiveTintColor: '#858585',
+        style: {borderColor:"#dcdcdc"},
+        labelStyle: {
+            fontSize: 12,
+        },
+        tabStyle: {paddingTop: 7,
+        }
+    },
+    animationEnabled: true,
+});
 
-},
+
+//创建页面跳转动画
+const TransitionConfiguration = () => ({
+        transitionSpec: {
+            duration: 300,
+            easing: Easing.out(Easing.poly(4)),
+            timing: Animated.timing,
+        },
+        screenInterpolator: sceneProps => {
+            const { layout, position, scene } = sceneProps;
+            const { index } = scene;
+
+            const width = layout.initWidth;
+            const translateX = position.interpolate({
+                inputRange: [index - 1, index, index + 1],
+                outputRange: [width, 0, 0],
+            });
+
+            const opacity = position.interpolate({
+                inputRange: [index - 1, index - 0.99, index],
+                outputRange: [0, 1, 1],
+            });
+
+            return { opacity, transform: [{ translateX }] };
+        },
+    })
+
+/*创建根路由*/
+
+export default  FirstApp= createStackNavigator({
+        TabBar: TabBar,
+        Settings: SettingsScreen,
+        Login:LoginScreen,
+    },
     {
         initialRouteName: 'TabBar',
-        /* The header config from HomeScreen is now here */
-        navigationOptions:{
-            header:null
-        }
+        navigationOptions: {
+            header: null
+        },
+        mode: 'card',
+        headerMode:'screen',
+        transitionConfig: TransitionConfiguration
     }
-    )
+)
+
+
+
+//登录拦截
+const defaultGetStateForAction=FirstApp.router.getStateForAction;
+FirstApp.router.getStateForAction = (action, state) => {
+
+    if (action.routeName ==='Mine') {
+        this.routes = [
+            ...state.routes,
+            {key: 'id-'+Date.now(), routeName: 'Login', params: { name: 'name1'}},
+        ];
+        return {
+            ...state,
+            routes,
+            index: this.routes.length - 1,
+        };
+    }
+    return defaultGetStateForAction(action, state);
+
+};

@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
 
     },
     statusBar:{
-        height: Platform.OS === 'ios' ? STATUS_BAR_HEIGHT:0,
+        height: Platform.OS === 'ios' ? STATUS_BAR_HEIGHT:25,
     }
 })
 export default Header

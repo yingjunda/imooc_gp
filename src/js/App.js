@@ -14,6 +14,6 @@ export default createSwitchNavigator(
         ButtomTabNavigator:ButtomTabNavigator
     },
     {
-        initialRouteName: 'AuthLoadingScreen',
+        initialRouteName: 'ButtomTabNavigator',
     }
 );
