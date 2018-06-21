@@ -126,7 +126,7 @@ FirstApp.router.getStateForAction = (action, state) => {
     if (action.routeName ==='Mine') {
         this.routes = [
             ...state.routes,
-            {key: 'id-'+Date.now(), routeName: 'Login', params: { name: 'name1'}},
+            {key: 'Login', routeName: 'Login', params: { name: 'name1'}},
         ];
         return {
             ...state,

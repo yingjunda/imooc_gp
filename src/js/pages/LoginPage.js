@@ -5,7 +5,7 @@ import BackButton from '../common/back'
 import RegInput from '../common/RegInput'
 import Styles from "../common/styles"
 import CommButton from "../common/commbutton";
-import {POST,$param} from'../utils/fetch'
+import {POST,postPromise,$param} from'../utils/fetch'
 class Login extends React.Component{
     static navigationOptions = ({navigation}) => ({
         header:null
@@ -15,7 +15,8 @@ constructor(props){
     console.log(this.props)
     this.state={
         phone:'',
-        loginPwd:''
+        loginPwd:'',
+        optSource:' '
     }
 }
     render(){
@@ -41,11 +42,18 @@ constructor(props){
         console.log(this.state)
     }
     submitButton(){
-
+console.log(JSON.stringify(this.state))
+        POST('api/noauth/doLogin',this.state)
+            .then(responseData=>{
+                if(code==200&&statusCode){
+                    this.props.navigation.goBack()
+                }
+            })
+            .catch(error=>console.log(error))
     }
 
     componentDidMount() {
-        console.log($param({a:'sdfsd',b:['sas','sss']}))
+        console.log($param({a:'sdfsd',b:['sas',' sss']}))
     }
 }
 

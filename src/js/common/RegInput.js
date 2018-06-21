@@ -16,7 +16,7 @@ class InputText extends React.Component {
     }
     static defaultProps = {
         placeholderTextColor:'#fefefe',
-        returnKeyType:'next',
+        returnKeyType:'done',
         onChangeText:()=>{}
     }
     render(){
