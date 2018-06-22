@@ -1,23 +1,22 @@
 //封装的请求  带超时
 const _timeout = 30*1000  //默认30秒
-
-
+let Url='http://quxunmi.com/'
+let timer=null
 //超时promise
 function timeoutPromise(timeout){
-    let dispatchTimeout = null;
-    const timeoutPromise =  new Promise((resolve, reject) => {
-        dispatchTimeout = () => {
+    timer=clearTimeout(timer)
+    let timeoutPromise =  new Promise((resolve, reject) => {
+        timer=setTimeout(() => {
             reject('请求超时')
-        }
+        }, timeout);
     })
-    setTimeout(() => {
-        dispatchTimeout();
-    }, timeout);
+
+    return timeoutPromise;
 }
 
 //get 请求
 function getPromise(url,body,showWaiting){
-    var url=url.indexOf("?")>0?url:(url+'?')
+    var url=Url+url.indexOf("?")>0?url:(url+'?')
     return new Promise((resolve, reject) => {
         fetch(url+$param(body), {
             method: 'GET',
@@ -37,16 +36,15 @@ function getPromise(url,body,showWaiting){
 }
 
 function postPromise(url,body,showWaiting) {
-    return new Promise((resolve, reject) => {
-        fetch(url, {
+    let postMentod= new Promise((resolve, reject) => {
+        fetch(Url+url, {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: $param(body),
-        })
-            .then((response) => response.json())
+        }).then((response) => response.json())
             .then((responseData) => {
                 resolve(responseData)
             })
@@ -54,6 +52,7 @@ function postPromise(url,body,showWaiting) {
                 reject(error)
             });
     })
+    return postMentod
 }
 
 function jsonParam(param,traditional){
@@ -108,19 +107,28 @@ function $param(obj, traditional){
         this.push(escape(key) + '=' + escape(value))
     }
     serialize(params, obj, traditional)
+    console.log(params.join('&').replace(/%20/g, '+'))
     return params.join('&').replace(/%20/g, '+')
 }
 
 
 //GET请求
-function GET(url,body, timeout = _timeout) {
+function GET(url,body,showWaiting,timeout = _timeout) {
 
-    return Promise.race([getPromise,timeoutPromise]);
+    return new Promise.race([getPromise(url, body,showWaiting),timeoutPromise(timeout)]);
 }
+
+
 //POST请求
-function POST(url, version, body, timeout = _timeout) {
+function POST(url, body,showWaiting, timeout = _timeout) {
 
-    return Promise.race([postPromise,timeoutPromise]);
+    return Promise.race([postPromise(url, body,showWaiting),timeoutPromise(timeout)]);
 }
+
+POST('api/noauth/doLogin',{phone:'13195319919',
+    loginPwd:'a11111',
+    optSource:' '})
+    .then(responseData=>{console.log(responseData)})
+    .catch(error=>console.log(error))
 
 export { GET, POST ,postPromise,getPromise,$param}
